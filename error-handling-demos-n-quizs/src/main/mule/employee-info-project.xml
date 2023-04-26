@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="employee-info-projectFlow" doc:id="693d3e1e-140a-4a13-887f-04eb2ebc8b96" >
+		<http:listener doc:name="/GET:employeeInfo" doc:id="329991d9-4772-499c-bc58-ce00749fda60" config-ref="HTTP_Listener_config" path="/employeeInfo" allowedMethods="GET">
+			<http:error-response >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<validation:is-number numberType="FLOAT" doc:name="Is number" doc:id="460affc2-afcf-4fa3-8e98-1195bf204860" value="#[attributes.queryParams.id]" message="Employee Id not a number."/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="f7777a48-dfdc-4e98-af2c-6f6d09d395b4" >
+			<route >
+				<db:select doc:name="PostgreSQL" doc:id="d0a29ec3-4e85-4621-bfd3-c308db83c59c" config-ref="PostgreSqlConfig">
+					<db:sql ><![CDATA[SELECT * FROM employee
+WHERE empid = :empid;]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	empid: attributes.queryParams.id
+}]]]></db:input-parameters>
+				</db:select>
+			</route>
+			<route >
+				<db:select doc:name="MySQL" doc:id="b90f0932-53a3-4bf4-a7ff-55022e3bbc0c" config-ref="MySql_Config">
+					<db:sql ><![CDATA[SELECT territoryId FROM employeeterritory
+WHERE employeeId = :employeeId;]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	employeeId: attributes.queryParams.id
+}]]]></db:input-parameters>
+				</db:select>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Merge" doc:id="4580a3c2-0652-4398-8777-fcf6ba59a3d2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload."0".payload ++ payload."1".payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value='#[payload[0].firstname]' doc:name="firstName" doc:id="ee10f604-38d4-4e52-8789-51fc0c963375" variableName="firstName"/>
+		<flow-ref doc:name="Flow Reference" doc:id="bb2e4cbd-e213-48c6-86c0-e1ab811fcaf3" name="genderize-nationalize-flow" target="genderNnationality"/>
+		<ee:transform doc:name="Transform Message" doc:id="027b2e57-9faa-4545-b782-b380ff8250e6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Name": vars.firstName,
+	"Gender": vars.genderNnationality.gender,
+	"Nationality": vars.genderNnationality.nationality,
+	"Employee Info": payload[0],
+	"Employee Territory": payload[1]
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="36208053-6b10-49a9-9aa2-3d809682ebcc" type="DB:CONNECTIVITY">
+				<set-payload value="DB connectivity fuilure" doc:name="DB connectivity failure" doc:id="a4c382e3-5ad4-4b6b-bbe2-d4d952a9eee5" />
+			</on-error-continue>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a65d33e7-002f-434c-94df-e4cfc9b53a57" when="#[error.errorType.namespace == 'VALIDATION']">
+				<set-payload value="ID not integer" doc:name="ID not integer" doc:id="a518850a-bcfb-4e42-bc4e-0f4147d03311" />
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="22a88250-6aca-4b2c-a48c-2dc21f6b612d" type="ANY">
+				<set-payload value="Error-in main flow" doc:name="Error-in main flow" doc:id="83ece6c2-410b-4125-9115-9ab845143d5c" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="genderize-nationalize-flow" doc:id="91d7bbdf-172a-41cf-9f35-d0b319d06c6d" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="e038056d-4d07-40fc-84da-a4647cacf502" >
+			<route >
+				<http:request method="GET" doc:name="Genderize" doc:id="7a9df93c-8cbb-4b21-a63c-254ea751e9fd" url='#["https://api.genderize.io?name=" ++ vars.firstName]'/>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Nationalize" doc:id="f7440b24-02c9-40b2-a98d-d83d30f7ef02" url='#["https://api.nationalize.io?name="++ vars.firstName]'/>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="ae94f108-38d9-49a4-8962-38de2025fc00">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+"gender": payload."0".payload,
+"nationality": payload."1".payload,
+'employee':vars.payload
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="4a4de575-b0c9-4375-a2ca-22b276b9a8cb" type="ANY">
+				<set-payload value="Http request failed" doc:name="Http request failed" doc:id="475362cb-3a67-43cd-9016-7ccade0b8a1a" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<flow name="Question1-A-Flow" doc:id="e472cebf-b6b1-49de-8020-496ba17828c2">
+		<http:listener doc:name="/GET:question1-a" doc:id="c19c5114-347a-4206-be40-0887a95bbc1b" config-ref="HTTP_Listener_config" path="/question1a" allowedMethods="GET" />
+		<set-payload value=" Started Flow(Main)" doc:name="Started Flow(Main)" doc:id="92f334a5-187b-47b7-8c61-4e0a408ae5e6" />
+		<validation:is-number numberType="INTEGER" doc:name="Is payload a number ? " doc:id="3eea4fd6-b05c-422d-b44e-68b5e70b731a" value="#[payload]" />
+		<set-payload value="Good Bye" doc:name="Good Bye" doc:id="3f9097a0-25d2-4777-a025-a757c113a934" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e40a325b-ec36-451f-8106-f0a7b516b735" type="ANY">
+				<set-payload value="On Error Propagate - Main Flow" doc:name="On Error Propagate - Main Flow" doc:id="f4f0866b-5ddf-4f01-a403-0c11c6005118" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="Question1-B-Flow" doc:id="a15c741e-517b-4d5f-a281-d9e1b9b00d27">
+		<http:listener doc:name="/GET:question1b" doc:id="116ee61f-35fa-4e16-afc7-5cb40bbf9cd6" config-ref="HTTP_Listener_config" path="/question1b" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="bef8e92b-75fb-4b13-aa29-f430799c7544" />
+		<validation:is-number numberType="INTEGER" doc:name="Is payload a number ? " doc:id="53184925-2231-414d-9911-d79c47d45ca1" value="#[payload]" />
+		<set-payload value="Good Bye" doc:name="Good Bye" doc:id="23905541-92d1-4c4b-bfe6-5a998ccbfa78" />
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="6716fd95-cad3-4b43-a933-75a7e1c22470" >
+				<set-payload value="On Error Continue - Main Flow" doc:name="On Error Continue- Main Flow" doc:id="49e325aa-79c5-43fe-a247-6436a99df78b" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Question2-Flow" doc:id="c2aae71b-9961-4688-ac5c-12084acd2d29">
+		<http:listener doc:name="/GET:question2" doc:id="308c5e49-4f4f-420f-a45e-8d70d0df0cdc" config-ref="HTTP_Listener_config" path="/question2" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="9c6d5f55-2e0c-4733-bee8-642935328316" />
+		<validation:is-number numberType="INTEGER" doc:name="Is payload a number ? " doc:id="1f7ce551-4474-4cf1-8162-d1a97e4a748c" value="#[payload]" />
+		<set-payload value="Good Bye" doc:name="Good Bye" doc:id="d73f4a45-cfaa-47ad-bd99-7284f65523bb" />
+	</flow>
+	<flow name="Question3-MainFlow-a" doc:id="e1011d7f-ec5f-4a3c-a8eb-d5399b95e0cd">
+		<http:listener doc:name="/GET:question3a" doc:id="2edfc6b3-db86-494a-a951-5c93c15fd4e2" config-ref="HTTP_Listener_config" path="/question3a" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="b3849541-1191-4153-9811-7ab8825463fa" />
+		<flow-ref doc:name="Flow Reference" doc:id="e0d4d511-8eea-48c9-a8f4-aea798a2a229" name="onErrorContinue-childFlow"/>
+		<set-payload value="Good Bye  (main flow)" doc:name=" Good Bye" doc:id="091ee655-f5d8-4c77-836c-efaca5251f87" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ae209d93-57c6-4b55-84c5-eebf58938fb2" >
+				<set-payload value="Error - Main(On Errror Propagate)" doc:name="Error - Main(On Errror Propagate)" doc:id="86d33e08-9eb0-4954-935b-7909976835d7" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="Question3-MainFlow-b" doc:id="db24c4d3-8567-4555-97b7-0e4db2da4d95">
+		<http:listener doc:name="/GET:question3b" doc:id="6cd7bf3d-26a1-46eb-bb51-2df468e8943b" config-ref="HTTP_Listener_config" path="/question3b" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="a38cb5b1-85f1-482a-941c-ed6f668a335c" />
+		<flow-ref doc:name="Flow Reference" doc:id="770d3fdc-cf70-44ea-8c5b-311d5c7a9983" name="onErrorContinue-childFlow"/>
+		<set-payload value="Good Bye  (main flow)" doc:name=" Good Bye" doc:id="f332ecce-80eb-4bcb-b8a6-717b99175c0a" />
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="72c454da-a5c3-4ff0-9bd9-9c67660edd0e" >
+				<set-payload value="Error - Main(On Error Continue)" doc:name="Error - Main(On Error Continue)" doc:id="63b455ce-0cca-423e-ac1c-977e2a0a3c9b" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="onErrorPropagate-childFlow" doc:id="59d2920c-09d7-4fbd-a829-9d62e469018c" >
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="10de2431-fece-44f4-a0d2-755a4b3ce445" value="#[payload]"/>
+		<set-payload value="Good bye (child flow)" doc:name="Good bye (child flow)" doc:id="6ee441a9-7a4b-4f38-9a90-8d41f701e63c" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9d5ef519-d6a9-4a1d-a5a9-b4ed0c4bb110" >
+				<set-payload value="Error - Child Flow (On Error Propagate)" doc:name="Error - Child Flow (On Error Propagate)" doc:id="10c8d654-5e91-4db5-bfd9-ceddb88193ac" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="onErrorContinue-childFlow" doc:id="f885480b-1841-43f8-bebc-79fb2234c417">
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="10a95560-e3b9-4fd1-b09b-f7afa870d4dc" value="#[payload]" />
+		<set-payload value="Good bye (child flow)" doc:name="Good bye (child flow)" doc:id="ea155872-7c30-4d85-b624-11a85fb7ab9e" />
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="60704b26-59e8-4bac-929c-c084713cdff4">
+				<set-payload value="Error - Child Flow (On Error Continue))" doc:name="Error - Child Flow (On Error Continue)" doc:id="7b2c33ec-b7bf-4758-a48f-81cbc68162cf" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="TryAFlow" doc:id="959d2d77-70ab-4356-84a8-6f9dba87cb2c" >
+		<http:listener doc:name="/GET:trya" doc:id="b513698a-191f-4c4f-bdd2-831f3f6f7834" config-ref="HTTP_Listener_config" path="/trya" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="b42e27d2-4e85-4f90-bdfc-d0d2d13c13d2" />
+		<try doc:name="Try" doc:id="ff7d6dba-efff-4139-be1d-fdde6c4c0518" >
+			<validation:is-number numberType="INTEGER" doc:name="Is the payload a number?" doc:id="8099e1d1-7345-48d8-8d67-9e54ccf78bd7" value="#[payload]"/>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d05648f0-76d2-4237-845e-cc357c1ca300" >
+					<set-payload value="Error - Try Scope(On Error Propagate) " doc:name="Error - Try Scope(On Error Propagate) " doc:id="9f320fad-f33e-49e0-a270-e638b959094c" />
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<set-payload value="Success - Good Bye!" doc:name="Good Bye" doc:id="b164c653-4bb4-447a-b2a4-4d2cca3877db" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b5137abe-4be7-4eab-ac9f-dbdb8c2a0c8e" >
+				<set-payload value="Error - Main(On Error Propagate)" doc:name="Error - Main(On Error Propagate)" doc:id="cf2c4757-9b97-4cdb-8346-f01a2d68c43f" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="TryBFlow" doc:id="c73e7864-a954-4c17-b086-166c586b7f59" >
+		<http:listener doc:name="/GET:tryb" doc:id="7cd2178c-9dfd-4b18-a8d8-4fcc304b7599" config-ref="HTTP_Listener_config" path="/tryb" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="0f5fe0b9-f6f5-4ae2-a79b-31bb5fd8e23a" />
+		<try doc:name="Try" doc:id="e228ddee-9bb2-49e9-8280-8e31faac5189" >
+			<validation:is-number numberType="INTEGER" doc:name="Is the payload a number?" doc:id="81aa8601-761d-4f1b-900b-604f429aa4ef" value="#[payload]" />
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bb362940-7e5e-4910-90b7-ca0e9fd6e1f2" >
+					<set-payload value="Error - Try Scope (On Error Continue)" doc:name="Error - Try Scope (On Error Continue)" doc:id="f14b10dc-5ab4-414b-a3b6-392e3441d441" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<set-payload value="Good Bye! (main flow)" doc:name="Good Bye! (main flow)" doc:id="de3d00a5-90a3-4c07-9e07-9edbf90ef2fb" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="504d0438-a546-45d6-90b0-8e76305f06e2" >
+				<set-payload value="Error - Main(On Error Propagate)" doc:name="Error - Main(On Error Propagate)" doc:id="060b7a1b-f134-4e08-8a81-8de899ed521c" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="TryCFlow" doc:id="bd356ca7-c999-464c-9661-904686e17596" >
+		<http:listener doc:name="/GET:tryc" doc:id="fb96ecfc-f3cd-4652-81f9-9d5606413087" config-ref="HTTP_Listener_config" path="/tryc" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="07080a04-617c-4adb-be01-9bd7bda725a4" />
+		<try doc:name="Try" doc:id="211bea39-9e2b-4d1b-9f33-6c34121216b7" >
+			<validation:is-number numberType="INTEGER" doc:name="Is the payload a number?" doc:id="64239f7e-ebcc-4838-8887-b180e4f387bd" value="#[payload]" />
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="31918f01-fe3f-401f-90d6-9a231d335243" >
+					<set-payload value="Error - Try Scope(On Error Propagate) " doc:name="Error - Try Scope(On Error Propagate) " doc:id="045a7095-89b1-48bf-ad04-96c5c06cb982" />
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<set-payload value="Success - Good Bye!" doc:name="Good Bye" doc:id="750db6f9-478d-440b-ad4f-a438cd0f8270" />
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c70f33fb-25ac-4d03-86b3-48a0a4b30ebb" >
+				<set-payload value="Error - Main(On Error Continue)" doc:name="Error - Main(On Error Continue)" doc:id="2aeeb2ec-2ee0-4b0a-8697-89dae7368072" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="TryDFlow" doc:id="fb4aa0cd-9b3d-48f9-a74d-88c94a52eb31" >
+		<http:listener doc:name="/GET:tryd" doc:id="80d67543-5ea7-4ecc-a6b4-f3624dfe2f0f" config-ref="HTTP_Listener_config" path="/tryd" allowedMethods="GET" />
+		<set-payload value="Hello " doc:name="Hello" doc:id="9af595a7-8608-4ab1-ae17-cda62d6abbfc" />
+		<try doc:name="Try" doc:id="aed9bd26-b050-4ee8-8c3c-c31b36ff836c" >
+			<validation:is-number numberType="INTEGER" doc:name="Is the payload a number?" doc:id="1a589565-89fc-4aa3-95d4-d6769346057b" value="#[payload]" />
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f1760e44-8843-4256-bba1-8871677dce43" >
+					<set-payload value="Error - Try Scope (On Error Continue)" doc:name="Error - Try Scope (On Error Continue)" doc:id="88e69a72-2905-4ad5-9279-03cd8d91e02e" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<set-payload value="Success - Good Bye!" doc:name="Good Bye" doc:id="8a85fdcb-a15b-460a-b120-fe4839d485be" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="cc55c8b1-957b-4537-bfc5-9f5053f915fc" >
+				<set-payload value="Error - Main(On Error Continue)" doc:name="Error - Main(On Error Continue)" doc:id="97aadd1d-2a0f-45a0-840b-ffb9688f0561" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="quiz-1-Flow" doc:id="ed45fd34-0653-45ed-b1d7-0df3196f614e" >
+		<http:listener doc:name="/GET:quiz1" doc:id="0798ccdc-5917-4d4d-a470-8167182aadf2" config-ref="HTTP_Listener_config" path="/quiz1" allowedMethods="GET" />
+		<set-payload value="Payload at start(main flow)" doc:name="Payload at start(main flow)" doc:id="07f5643c-9257-458a-807f-bd7e5608d56d" />
+		<validation:is-blank-string doc:name="Is blank string" doc:id="de3175da-048d-4c71-a801-e8179c5eb587" value="#[payload]"/>
+		<set-payload value="Payload at the end(main flow)" doc:name="Payload at the end(main flow)" doc:id="9beff1c9-9ad9-4acb-b37d-656b2580fb19" />
+	</flow>
+	<flow name="quiz-2-Flow" doc:id="033f9d8b-ea1d-42a5-b4bd-b0408ad13c7e" >
+		<http:listener doc:name="/GET:quiz2" doc:id="31c69b90-09c4-421c-8d69-d9e87dff284f" config-ref="HTTP_Listener_config" path="/quiz2" allowedMethods="GET" />
+		<set-payload value="Payload at start(main flow)" doc:name="Payload at start(main flow)" doc:id="92d961ee-ccc2-4871-89c3-3ece40bbefc9" />
+		<http:request method="GET" doc:name="Request" doc:id="09f2b1b3-2b52-407d-be4e-7164d5499907" config-ref="HTTP_Request_configuration" path="/test"/>
+		<set-payload value="Payload at the end(main flow)" doc:name="Payload at the end(main flow)" doc:id="1f312c20-5fae-4484-9e59-969476caf873" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="530971f1-1308-4b64-9a65-64efa34a22cd" >
+				<set-payload value='"Error"' doc:name='"Error"' doc:id="1538b567-8e88-4cf6-8231-5f5bbda25be2" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="use-shared-error-handler" doc:id="2be9f2b2-764e-4f9a-8d3e-54f75d80902c" >
+		<http:listener doc:name="/GET:sharedErrHad" doc:id="7aa3015b-4076-492a-a46a-f31aaf0d9b1a" config-ref="HTTP_Listener_config" path="/sharedErrHad"/>
+		<set-payload value="hello" doc:name="hello" doc:id="82988019-d815-44e4-9624-cab04b6292f9" />
+		<validation:is-number numberType="INTEGER" doc:name="Is number" doc:id="5e7bb0d3-9dc6-4b8b-a1eb-50ee60c3d4c0" value="#[payload]"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="213dba9d-bd47-461c-801a-b17d831d69d1" />
+		<error-handler ref="globalError_Handler_Continue" />
+	</flow>
+</mule>

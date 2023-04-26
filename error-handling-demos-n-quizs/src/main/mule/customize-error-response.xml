@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	
+	<flow name="example1A" doc:id="d97d60d9-e46c-4114-a331-e1b63c1eebcb" >
+		<http:listener doc:name="example1A" doc:id="404c53e7-cfbf-42bf-aa2d-0909138846a9" path="/example1A" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Started Flow(Main)" doc:name="Started Flow(Main)" doc:id="89ff4242-62b6-47ac-979d-7f70dc5741a0" />
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="507910bd-31b6-4c13-80c3-bb04e3f29654" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value="Finished Flow(Main)" doc:name="Finished Flow(Main)" doc:id="fdc1eb8b-e90f-4c15-8cc4-82522e22cf62" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7a46ff81-ab19-4d3d-a159-52e2437f3fbe" >
+				<set-payload value="Error -Main Flow" doc:name="Error -Main Flow" doc:id="84678691-3460-4820-8696-f9e664c4d926" />
+				<set-variable value="#[700]" doc:name="700" doc:id="16f444fe-6878-47d6-b53e-03f5af95840d" variableName="status_code"/>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	
+	<flow name="example1B" doc:id="bc8f4d5a-3912-4a56-a003-64f6ef1d15bd" >
+		<http:listener doc:name="example1B" doc:id="493aa63b-738b-4dd8-b88c-666c8cfe710b" path="/example1B" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Started Flow(Main)" doc:name="Started Flow(Main)" doc:id="c8bc690f-4422-4a6e-9e82-075e2017c431" />
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="525d7b39-9f71-44de-b126-1acf2fab3371" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value="Finished Flow(Main)" doc:name="Finished Flow(Main)" doc:id="423d696a-bf98-4213-ba3e-c085d5dcd49a" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="ab50aeab-e8e5-4fcd-97ba-1dbb4bf01a56" >
+				<set-payload value="Error -Main Flow" doc:name="Error -Main Flow" doc:id="6fa01cd2-7766-4a55-80fa-4b389c9d2e05" />
+				<set-variable value="201" doc:name="Set Variable" doc:id="7a21a575-cf4a-4443-8383-1c2f6d13b497" variableName="status_code"/>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	
+	<flow name="example1C" doc:id="2596a2e7-f5f5-4382-a9de-f44cd635a2dc" >
+		<http:listener doc:name="/example1C" doc:id="50f007e4-01f1-413b-8456-802ff6a6f50b" path="/example1C" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Started  Flow(Main)" doc:name="Started Flow(Main)" doc:id="d9c5af83-581c-4286-a905-189274b17dbc" />
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="28135a0e-1bf4-4181-ac07-80215208c525" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value="Finished  Flow(Main)" doc:name="FinishedFlow(Main)" doc:id="5caceb80-ce27-43db-9f51-df1995fecb6f" />
+	</flow>
+	
+	<flow name="example2A" doc:id="7323d4c7-09ed-44e8-9c1b-583f20d8ed60" >
+		<http:listener doc:name="/example2A" doc:id="eee63f07-2b3a-447a-b62e-479b266e0ebb" path="/example2A" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Started Flow(Main)" doc:name="Started Flow(Main)" doc:id="2cab5d5b-4ddf-4ae4-92f7-05e898cfe1ff" />
+		<flow-ref doc:name="Flow Reference" doc:id="5149bc35-994a-49b0-9a4d-98c49c57911b" name="example2A-private-flow" />
+		<set-payload value="Finished Flow(Main)" doc:name="Finished Flow(Main)" doc:id="b278128c-2dd3-4504-8c25-c00c6087fcd6" />
+	</flow>
+	<flow name="example2A-private-flow" doc:id="e3b58eaa-4883-407e-9c94-c950a7268cde" >
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="57462165-99fb-403e-9fce-b15bc124c27c" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value=" Finished private Flow" doc:name="Finished private Flow" doc:id="9f72761e-665f-4c0a-adef-9af47e1c261c" />
+	</flow>
+	
+	<flow name="example2B" doc:id="64594859-4a6a-426a-9ed8-53793ec97911" >
+		<http:listener doc:name="/example2B" doc:id="1b41aa92-0a99-4624-969d-5c8598b75746" path="/example2B" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Started Flow(Main)" doc:name="Started Flow(Main)" doc:id="48ae8c2c-190d-40a2-8ca3-d1b22a267624" />
+		<flow-ref doc:name="Flow Reference" doc:id="06dcedf9-c40d-46f9-97a7-d210be3d4a4b" name="example2B-private-flow"/>
+		<set-payload value="Finished Flow(Main)" doc:name="Finished Flow(Main)" doc:id="a48224cb-3249-4f77-913b-57a620f75368" />
+	</flow>
+	
+	<flow name="example2B-private-flow" doc:id="e21960f4-fd2c-4e97-9589-3b640cb337c1" >
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="b5a94888-3d34-4054-9718-7eee985f1a34" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value="Finished private Flow" doc:name="Finished private Flow" doc:id="de369fc8-f813-4223-b667-f822675607b6" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a4e3c981-5bee-442a-9257-aee9422c322a" >
+				<set-payload value="Error - Private Flow" doc:name="Error - Private Flow" doc:id="7ece5895-da1b-47a8-9f56-07e1afa8c9ee" />
+				<set-variable value="#[700]" doc:name="700" doc:id="84b376d6-7ee0-4747-9927-f0f8b0cfb738" variableName="status_code"/>
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	
+	
+	<flow name="example2C" doc:id="ae7768bd-06ca-4bb3-9d08-bb8eaf038c12" >
+		<http:listener doc:name="/example2C" doc:id="bc4ee89b-a118-4067-9436-cb5651eb3888" path="/example2C" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Started Flow(Main)" doc:name="Started Flow(Main)" doc:id="2adfb4eb-a368-481d-8c4a-f9350cb7421c" />
+		<flow-ref doc:name="Flow Reference" doc:id="0f0c1e65-cd09-4288-85a8-6a152de22cda" name="example2C-private-flow"/>
+		<set-payload value="Finished Flow(Main)" doc:name="Finished Flow(Main)" doc:id="86b10ec8-07c9-4e28-8c79-52199641de6e" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="583d5fbf-0099-456f-8bfe-e95ce3ed5ab2" >
+				<set-payload value="Error - Finished main Flow" doc:name="Error - Finished main Flow" doc:id="01420223-a693-4954-8b81-444c5bdf5a24" />
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	
+	<flow name="example2C-private-flow" doc:id="aa506d8d-5573-4da3-b0c6-4428dfe6e188" >
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="e01bf0f0-4a24-45ec-83cb-67a4eef30ff0" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value="Finished private Flow" doc:name="Finished private Flow" doc:id="cbcab99c-e1e6-4bde-8975-b55f28fb86b1" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2a95887b-44a1-4e2c-a1c1-4f199100f518" >
+				<set-payload value="Error -  private Flow" doc:name="Error - private Flow" doc:id="633fd417-a671-4cb3-884b-5712db10f259" />
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	
+	<flow name="example2D" doc:id="fecf8af2-c3ce-4b53-83a2-c3d7f74327fa" >
+		<http:listener doc:name="/example2D" doc:id="bca2d50a-b3e6-4325-b481-99c5e063452f" path="/example2D" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Started Flow(Main)" doc:name="Started Flow(main)" doc:id="af402597-5ec1-4124-bdd0-19d5cce1c35a" />
+		<flow-ref doc:name="Flow Reference" doc:id="6e881fc5-c6bf-4828-8fca-689525f190d7" name="example2D-private-flow"/>
+		<set-payload value=" Finished Flow(Main)" doc:name="Finished Flow(Main)" doc:id="e865354d-f23e-4010-b7b6-c570bf41cabc" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6a4ee8e2-63ce-4dbd-ba2c-f26e343daf70" >
+				<set-payload value="Error -  main Flow" doc:name="Error - main Flow" doc:id="29a5798a-48f0-4f9a-bf2a-2bca3a7e7b8e" />
+			</on-error-propagate>
+		</error-handler>
+	
+</flow>
+	
+	
+	<flow name="example2D-private-flow" doc:id="236ebc62-37af-41e7-9916-3b6fea305dcf">
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="2f5ee09a-ab76-46da-8ae5-6030cb030505" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value="Finished private Flow" doc:name="Finished private Flow" doc:id="b2ad67fb-7b0a-410b-91dd-6041f4de4e3c" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2c150728-c8fa-4329-b184-55b7108b1158" >
+				<set-payload value="Error -  private Flow" doc:name="Error - private Flow" doc:id="ce8300e0-565e-4da0-9e8f-34a66f64dd2a" />
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	<flow name="example2E" doc:id="fc0733d3-d9fb-4069-9e61-23c370fd5e65" >
+		<http:listener doc:name="/example2E" doc:id="4be078b0-bc5b-498e-87db-86df40336902" path="/example2E" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="6d32d79a-1ccc-4778-a33d-ce688c1c0925" />
+		<logger level="INFO" doc:name="Logger" doc:id="afcbb963-b880-473d-af8f-aae83abcbffb" />
+		<flow-ref doc:name="Flow Reference" doc:id="01cd7981-65ed-4b51-ab74-d8ce52cbf001" name="example2E-private-flow"/>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="dcec44a3-3dc5-4a94-9e1a-8ca89632b36d" />
+		<logger level="INFO" doc:name="Logger" doc:id="18acfda4-cf8a-4802-b9e8-9e21e3b5fbd9" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="dd41191d-63a1-412e-84bc-19218aba6ce6">
+				<set-payload value="inside main flow" doc:name="inside main flow" doc:id="d928e11d-1fe5-4c4e-baf3-75d68ba67cc8" />
+				<set-variable value="#[770]" doc:name="770" doc:id="e5a9b00b-c91e-4ff6-84ee-44b8ac6e17bb" variableName="status_code"/>
+				<logger level="INFO" doc:name="Logger" doc:id="2c5fa4df-001d-40e7-a8c6-055e275e5388" />
+			</on-error-propagate>
+		</error-handler>
+	
+</flow>
+	<flow name="example2E-private-flow" doc:id="00031879-e1c3-475f-a53c-90456df9670e" >
+		<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="7d9af07f-9bac-47ba-ba87-8bdc7ba3974b" config-ref="Validation_Config" value="#[payload]" />
+		<set-payload value="Success - Finished private Flow" doc:name="Success - Finished private Flow" doc:id="5c4b423c-0c97-4e0b-a705-318dcb954202" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5e89dffc-4cf6-453e-a918-8cf052864aed" >
+				<set-payload value="inside private flow" doc:name="inside private flow" doc:id="bddc453c-b9a3-4cf3-896f-0d242395bedb" />
+				<set-variable value="#[700]" doc:name="700" doc:id="2c9964cd-63fc-49d0-8263-14e3de669ec5" variableName="status_code"/>
+				<logger level="INFO" doc:name="Logger" doc:id="48a90ea0-8de2-4ec4-a891-404bfe3f7982" />
+			</on-error-propagate>
+		</error-handler>
+	
+</flow>
+	
+	<flow name="example3A" doc:id="6310a41f-ec09-46ba-9c86-8b10b94b07db" >
+		<http:listener doc:name="/example3A" doc:id="79315e84-3b0b-4145-bf5b-6ee0b7028933" path="/example3A" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="3b4ba8b8-a6dc-4b7e-956d-1ea8960165b7" />
+		<logger level="INFO" doc:name="Logger" doc:id="f266d584-1753-457a-b8d3-caa0bcdd2002" />
+		<try doc:name="Try" doc:id="744cb7b1-e047-492d-952a-f46dea6bd40d" >
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="c472eb6d-6886-4603-9282-f0d5b1747047" config-ref="Validation_Config" value="#[payload]"/>
+			<logger level="INFO" doc:name="Logger" doc:id="754fb23e-5d65-43b8-b43f-7d5342b06bca" message="After validator"/>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="601f5f20-cbba-493f-b996-de13280ecf69" >
+					<set-payload value="Error -Try Scope" doc:name="Error -Try Scope" doc:id="f3f07922-5f92-459d-86a8-87be789501c8" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="8d9b90ee-6d89-4fb1-8cf3-73b1a42ca2cf" />
+		<logger level="INFO" doc:name="Logger" doc:id="7f95328e-92ad-480d-91d3-fe4cfd61ca4f" />
+	</flow>
+	<flow name="example3B" doc:id="e093ebdb-f5d0-43b0-9b0c-77ac80439123">
+		<http:listener doc:name="example3B" doc:id="7c20efa7-d175-47df-8bf8-f80c16e79a44" path="/example3B" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="836a3130-1ce9-448c-8c86-e015433150d7" />
+		<logger level="INFO" doc:name="Logger" doc:id="b58437df-7945-4e16-8d66-65f6dce6bde4" />
+		<try doc:name="Try" doc:id="fa2036f1-6ca2-4b64-9ba6-9674dc002d74">
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="8c96103a-cf03-462e-875d-62e1b39f5126" config-ref="Validation_Config" value="#[payload]" />
+			<logger level="INFO" doc:name="Logger" doc:id="624dfc1a-fc46-4372-bf10-19718ad22368" />
+			<set-payload value="#[payload]" doc:name="Set Payload" doc:id="39aba3c7-3177-42ce-b6f3-b92bc0f65daa" />
+			<error-handler>
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="79bffae7-4272-4905-a059-3283d1bf8d48" >
+					<set-payload value="Error -Try Scope" doc:name="Error -Try Scope" doc:id="e51ce713-17b6-4047-96a7-b17ebf7b2a1b" />
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="9b7028bc-5bd5-4da8-b837-49bada1707d5" />
+		<logger level="INFO" doc:name="Logger" doc:id="c7b72ed6-1c60-4f48-bcf4-7ed105ba8559" />
+	</flow>
+	<flow name="example3C" doc:id="f08312bc-d0bc-40b3-b2ca-266901cb4a27">
+		<http:listener doc:name="/example3C" doc:id="4450943c-8bc4-4fc6-945c-85367b1b7e93" path="/example3C" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="4a4f3bca-280b-45a3-867b-baa63ad59152" />
+		<logger level="INFO" doc:name="Logger" doc:id="cd9d2374-3b38-4235-81f2-3d373e037ae5" />
+		<try doc:name="Try" doc:id="c9ea1f69-dcac-4fbe-a476-e5e833b7ba06">
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="5e47a584-6779-4e80-a864-37f3979589c8" config-ref="Validation_Config" value="#[payload]" />
+			<logger level="INFO" doc:name="Logger" doc:id="762cbac4-d9b7-4aa8-8cb1-54e43a464003" />
+		</try>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="0960e586-d423-44e6-95e6-14822d665508" />
+		<logger level="INFO" doc:name="Logger" doc:id="9da7c297-e9e5-41db-8046-26e764e03bca" />
+	</flow>
+	
+	<flow name="example4A" doc:id="e96e296f-6c55-4966-853a-44d8a6b0073a" >
+		<http:listener doc:name="/example4A" doc:id="9f71d18b-e6be-4086-b5dd-c09431a510a4" path="/example4A" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="9202d6e7-c3cd-41b2-b5c8-b45d88039795" />
+		<logger level="INFO" doc:name="Logger" doc:id="dce73dc5-b17d-4207-8b2f-9ae0dc230497" />
+		<flow-ref doc:name="Flow Reference" doc:id="d0e0da0e-cf7d-440f-a933-851471a6fa3f" name="example4A-private-flow"/>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="079e6307-c1de-440b-a216-da2a2a376035" />
+		<logger level="INFO" doc:name="Logger" doc:id="3b19d8c0-ac96-4f17-8e1a-e67e0899fe8f" />
+	</flow>
+	
+	<flow name="example4A-private-flow" doc:id="42473e64-4966-4cf8-bbd1-e3f8c8e5670c" >
+		<try doc:name="Try" doc:id="5b8874a9-8085-4294-afb8-a63ee60d1d78" >
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="e4e55a81-aee7-4a4d-924a-7db6a5137538" config-ref="Validation_Config" value="#[payload]" />
+			<logger level="INFO" doc:name="Logger" doc:id="86638e85-d054-4f90-b98a-7521284f8a06" />
+		</try>
+		<set-payload value="Success - Finished private Flow" doc:name="Success - Finished private Flow" doc:id="661d0d7e-d1b3-438a-9d75-628015bab19f" />
+	</flow>
+	
+	<flow name="example4B" doc:id="b70fc22f-6726-4652-aefc-a7ad786d1cac" >
+		<http:listener doc:name="/example4B" doc:id="a03b08c4-164b-4135-b899-943f69b79dff" path="/example4B" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="18c595bf-6500-47d1-b999-d9708e7a30c9" />
+		<logger level="INFO" doc:name="Logger" doc:id="500db3a0-65d1-44e1-b76a-003384e9659c" />
+		<flow-ref doc:name="Flow Reference" doc:id="212e42f2-a7de-4a45-bc37-d8b61a1b6265" name="example4B-private-flow"/>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="d84ff968-60b8-4985-a6c0-36769784494a" />
+		<logger level="INFO" doc:name="Logger" doc:id="2cd509a6-0c2d-4c25-806d-a2ba4b1029d6" />
+	</flow>
+	
+	<flow name="example4B-private-flow" doc:id="c2948142-a484-4707-a6c9-c9a758352363" >
+		<try doc:name="Try" doc:id="0ac00bd3-32fa-4811-9ac1-ecb28d3885ea" >
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="60a9d098-622c-4308-b862-2828f0234ac9" config-ref="Validation_Config" value="#[payload]" />
+			<logger level="INFO" doc:name="Logger" doc:id="b97b7230-1992-42c3-88d1-87e5ce565e6f" />
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="47596aa7-dc87-4d72-ad36-454a035c6850" >
+					<set-payload value="try block-private flow" doc:name="try block-private flow" doc:id="1b5a6c27-44d0-462a-99ee-4d37c3ecdb49" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<set-payload value="Success - Finished private Flow" doc:name="Success - Finished private Flow" doc:id="cddaa2b6-d7ee-434d-bb58-6a67c2f53127" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="74784257-a68e-4978-8d8a-8ce789d3bb8b" >
+				<set-payload value="Error - Finished private Flow" doc:name="Error - Finished private Flow" doc:id="b19ac636-70f2-4478-886b-b00100d5bff3" />
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	
+	
+	<flow name="example4C" doc:id="6bfd00c9-0aaf-4224-a14f-975d11d36173" >
+		<http:listener doc:name="/example4C" doc:id="fd6ff1b4-8211-476f-a100-9c411e06da1d" path="/example4C" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="6ced54bd-3451-45d8-9c55-ba97692602c3" />
+		<logger level="INFO" doc:name="Logger" doc:id="69ef34b7-6249-45db-a159-c9c9ed069881" />
+		<flow-ref doc:name="Flow Reference" doc:id="2e6340d8-4ce9-4027-a29b-183418054969" name="example4C-private-flow"/>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="4abbc2be-5c48-460b-ab5c-2ab2d93e741f" />
+		<logger level="INFO" doc:name="Logger" doc:id="4978f4ab-a403-4380-a077-bd24d31e46cf" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="1675dc7c-e38f-4724-a095-2cc321086fe7" >
+				<set-payload value="Error - Finished main Flow" doc:name="Error - Finished main Flow" doc:id="3d9c0f45-7a33-4258-ab96-98272f15677c" />
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	
+	<flow name="example4C-private-flow" doc:id="d0ce33b6-ccc6-44ce-91ff-eceecce848e2" >
+		<try doc:name="Try" doc:id="63f789a4-777e-432a-b139-ce1f32c96a47" >
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="4629bd2f-e825-44e9-8557-7af67481dd23" config-ref="Validation_Config" value="#[payload]" />
+			<logger level="INFO" doc:name="Logger" doc:id="643fb2d5-bf5f-41e3-9707-5c2b6eae1f82" />
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="675358dc-0940-454f-b466-2474241f07b0" >
+					<set-payload value="try block-private flow" doc:name="try block-private flow" doc:id="4953f87e-2285-44f5-a466-c8b8fea7e459" />
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<set-payload value="Success - Finished private Flow" doc:name="Success - Finished private Flow" doc:id="71465a21-1ec1-49c4-8009-9d57a5be3440" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="af207b1b-7026-4b34-b37a-6983b20deaaa" >
+				<set-payload value="Error - Finished private Flow" doc:name="Error - Finished private Flow" doc:id="8f6e337b-a8c8-433a-b7bf-d56bed8c886b" />
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	
+	<flow name="example4D" doc:id="eab93f6b-c2c5-478d-aab0-0328f4468fad" >
+		<http:listener doc:name="/example4D" doc:id="d520447c-e0ee-4e55-82d6-3d2d98aaa0e7" path="/example4D" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]" >
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="64312436-435b-483d-8c65-b6e5ed2c544e" />
+		<logger level="INFO" doc:name="Logger" doc:id="4b110cb1-083c-4dcb-8a87-826df7843419" />
+		<flow-ref doc:name="Flow Reference" doc:id="0cfb14a1-c9ae-49f5-b8cd-ae3f1db36106" name="example4D-private-flow"/>
+		<set-payload value="Success - Finished Flow" doc:name="Success - Finished Flow" doc:id="feb626d0-b98f-4f62-9e4c-da0fd67f0132" />
+		<logger level="INFO" doc:name="Logger" doc:id="3ee9ef8e-3d52-4f30-ba64-352c060d64bc" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="95a59677-087b-4a70-afbf-4ebfde130dd0" >
+				<set-payload value="Error - Finished main Flow" doc:name="Error - Finished main Flow" doc:id="6a017067-2640-48ad-b4c1-6f4775cea6d0" />
+			</on-error-propagate>
+		</error-handler>
+	
+</flow>
+	
+	
+	<flow name="example4D-private-flow" doc:id="5fe48f49-0856-4203-aea0-06facdaeb183">
+		<try doc:name="Try" doc:id="a521d59c-ae68-4b44-ac8e-74459bc8b9de" >
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="8a3895e7-7681-488f-b1ed-a432324a5574" config-ref="Validation_Config" value="#[payload]" />
+			<logger level="INFO" doc:name="Logger" doc:id="6b80c494-b3a3-4425-9547-1b322531a144" />
+		</try>
+		<set-payload value="Success - Finished private Flow" doc:name="Success - Finished private Flow" doc:id="791c4a2e-5e52-4f42-adb1-4454432f8edb" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="06134ff4-64fe-4730-b55d-ccdc0518ba85" >
+				<set-payload value="Error - Finished private Flow" doc:name="Error - Finished private Flow" doc:id="3eb85a11-7c89-4081-ab8a-8f5f44e802d4" />
+			</on-error-continue>
+		</error-handler>
+	
+</flow>
+	<flow name="example4E" doc:id="83147e67-c1d5-4ed0-be40-5ffb53cc6ede" >
+		<http:listener doc:name="/example4E" doc:id="1cee42af-9d28-45d9-89c1-90233903e7fa" path="/example4E" config-ref="HTTP_Listener_config">
+			<http:error-response statusCode="#[vars.status_code]">
+				<http:body ><![CDATA[#[payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload value="Success -Started Flow" doc:name="Success -Started Flow" doc:id="ed3926a5-6e1e-43d2-909e-a8e91d5cc63e" />
+		<logger level="INFO" doc:name="Logger" doc:id="b28e29fb-022d-47de-b0b3-fce62b0eacd6" />
+		<flow-ref doc:name="Flow Reference" doc:id="959c6b35-fb02-4bd4-8655-80c8281d2946" name="example4E-private-flow"/>
+		<set-payload value="Success - Finished private Flow" doc:name="Success - Finished Flow" doc:id="6a089b81-0cb2-438c-b10e-566c4047e7e2" />
+		<logger level="INFO" doc:name="Logger" doc:id="cf190b8d-f674-4010-b66d-55daa76a1538" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b749ee3f-0403-49bd-bf1b-196e20485e4b">
+				<set-payload value="inside main flow" doc:name="inside main flow" doc:id="faf0a061-bc00-4553-afb7-9d31840c494a" />
+				<set-variable value="700" doc:name="Set Variable" doc:id="c50098d1-63d3-4f48-b186-d3c6c1b3c971" variableName="status_code"/>
+				<logger level="INFO" doc:name="Logger" doc:id="cf78d519-0962-4157-84b0-2a144eb5e1e1" />
+			</on-error-propagate>
+		</error-handler>
+	
+</flow>
+	<flow name="example4E-private-flow" doc:id="298ae660-ff76-48cb-8bab-bdc0f0010918" >
+		<try doc:name="Try" doc:id="239ad717-6e14-4e22-b58a-2db53e0f5744" >
+			<validation:is-number numberType="INTEGER" doc:name="is the payload a number?" doc:id="00c0803c-aff6-4303-b8dc-8e5ac383a602" config-ref="Validation_Config" value="#[payload]" />
+			<logger level="INFO" doc:name="Logger" doc:id="c572eb66-c22b-47b9-988a-a7c27a86e078" />
+		</try>
+		<set-payload value="Success - Finished private Flow" doc:name="Success - Finished private Flow" doc:id="e136661e-9174-4d20-964e-1bcd9af38d4d" />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="186ca8a5-52dc-407a-992a-c9841f0db54e" >
+				<set-payload value="inside private flow" doc:name="inside private flow" doc:id="b40e3963-45ab-4bb8-a92a-bfc4a74155f8" />
+				<set-variable value="701" doc:name="Set Variable" doc:id="c340014c-f55a-43ad-a54d-6e5228574b10" variableName="status_code"/>
+				<logger level="INFO" doc:name="Logger" doc:id="b5c23693-52bc-44b5-810b-d8547b2b39f8" />
+			</on-error-propagate>
+		</error-handler>
+	
+</flow>
+	
+</mule>

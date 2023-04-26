@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<db:config name="MySql_Config" doc:name="Database Config" doc:id="684de3a8-23b0-46f1-94d5-6b9123c9394f" >
+		<db:my-sql-connection host="${mysql.host}" port="${mysql.port}" user="${mysql.user}" password="${mysql.password}" database="${mysql.database}" />
+	</db:config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="78118b24-a6db-4d42-88f6-17b3b796c57b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="1413ea73-b0b1-4803-9b3e-bd1dd58bfd3c" >
+		<http:request-connection host="localhost" port="9081" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="fd8c958e-b14d-4da3-af36-c1c87cfa7234" file="config.yaml" />
+	<configuration doc:name="Configuration" doc:id="9779201e-2754-4bfd-9858-6dd135b038c5" defaultErrorHandler-ref="globalError_Handler" />
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="25281ba7-1c37-4406-9f89-03dc45497857" />
+	<db:config name="PostgreSqlConfig" doc:name="Database Config" doc:id="086111f2-b130-45f8-bdbb-03b33afff0d5" >
+		<db:generic-connection url="${postgres.url}" driverClassName="${postgres.dclass}" user="${postgres.username}" password="${postgres.password}"/>
+	</db:config>
+	<error-handler name="globalError_Handler_Propogate" doc:id="bfe20b2c-775c-4dec-8ae7-e32441574d48" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ec40e1f9-c6de-4f04-b21d-f7c3e3281e28" >
+			<set-payload value="Error -Global (On Error Propagate)" doc:name="Error -Global (On Error Propagate)" doc:id="a6fc3973-7cb5-45d7-987c-4e9ff161db0d" />
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="globalError_Handler_Continue" doc:id="c50a6425-e10f-4801-a4d6-596c3cf6ad1f" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f986ef8e-62dc-4576-8c30-e50db49f0db9" >
+			<set-payload value="Error - Global(On Error Continue)" doc:name="Error -Global(On Error Continue)" doc:id="b4e0435f-e27a-4ce1-9917-f964cb015587" />
+		</on-error-continue>
+	</error-handler>
+	<error-handler name="globalError_Handler" doc:id="4ad8276e-a63b-4a69-a237-8f23c3e7778b" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="38c30078-68e9-4326-8a12-f0e008dde7d7" >
+			<set-payload value="Err: GlobalErrorHanler" doc:name="Err: GlobalErrorHanler" doc:id="ea33a910-8bd0-48f9-8871-f494fb6ddb1c" />
+		</on-error-propagate>
+	</error-handler>
+</mule>

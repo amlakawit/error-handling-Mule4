@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_91d7bbdf_172a_41cf_9f35_d0b319d06c6d_Input_Payload = Array<{|  empid: Number,   lastname: String,   firstname: String,   title?: String,   titleofcourtesy?: String,   birthdate?: Date,   hiredate?: Date,   address?: String,   city?: String,   region?: String,   postalcode?: String,   country?: String,   phone?: String,   extension?: String,   photo?: Binary,   notes?: String,   mgrid?: Number,   photopath?: String|} | {| territoryId: String |}>
+
